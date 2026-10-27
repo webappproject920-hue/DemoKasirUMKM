@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Kasir UMKM - Mode Demo</title>
+<style>
+:root{--navy:#17324d;--blue:#245b83;--bg:#f3f6fa;--green:#168653;--red:#c0392b;--muted:#64748b;--line:#dce4ec}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eaf2fb 0%,#f5f8fc 48%,#e7f6ef 100%);color:#172033}button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:12px 14px;font-weight:700}button:disabled{opacity:.5;cursor:not-allowed}
+header{background:linear-gradient(110deg,#17324d 0%,#245b83 72%,#24775b 100%);color:white;padding:16px;box-shadow:0 4px 16px #17324d22;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}header h1{font-size:19px;margin:0}header small{opacity:.8}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav button{background:#294a67;color:white}.nav button.active{background:#fff;color:var(--navy)}
+main{max-width:1200px;margin:auto;padding:16px}.hidden{display:none!important}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.card,.panel{background:rgba(255,255,255,.96);border:1px solid #d5e2ee;border-radius:14px;padding:15px;box-shadow:0 5px 18px #18324d0d}.label{font-size:12px;color:var(--muted);margin-bottom:8px}.big{font-size:22px;font-weight:800}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:14px}.menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.menu-btn{background:#fff;border:1px solid var(--line);text-align:left;min-height:92px;color:#172033}.menu-btn:active{transform:scale(.98)}.menu-btn strong{display:block;margin-bottom:8px}.price{color:var(--green);font-size:14px}.panel h2{font-size:17px;margin:0 0 14px}.cart-row{display:grid;grid-template-columns:1fr auto;gap:8px;border-bottom:1px solid var(--line);padding:10px 0}.qty{display:flex;align-items:center;gap:8px}.qty button{padding:5px 9px;background:#e9f0f7;color:var(--navy)}.field{display:block;margin:12px 0}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}.field input,.field select,input[type=date]{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;background:white}.total-line{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0}.total-line.total{font-size:20px;font-weight:800;border-top:1px solid var(--line)}.change-box{background:#eaf8f0;border-radius:10px;padding:14px;margin:12px 0}.change-box .big{font-size:26px;color:var(--green)}.primary{background:var(--green);color:white;width:100%}.secondary{background:#e8eef5;color:var(--navy)}.danger{background:#fff0ee;color:var(--red)}.notice{padding:11px;border-radius:9px;background:#fff6df;color:#7b5200;margin-bottom:12px;font-size:13px}.success{background:#eaf8f0;color:#126a40}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}th{color:var(--muted);background:#f8fafc}.small{font-size:12px;color:var(--muted)}.login-wrap{max-width:390px;margin:10vh auto;padding:20px}.login-wrap .panel{padding:24px}.login-wrap h1{margin-top:0}.right{text-align:right}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#172033;color:white;padding:12px 18px;border-radius:10px;z-index:20;max-width:90%;box-shadow:0 5px 20px #0002}.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+@media(max-width:800px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.big{font-size:19px}main{padding:10px}.panel{padding:12px}}
+
+.extra-menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.extra-menu-grid .field{margin:0}.inline-actions{display:flex;gap:6px;flex-wrap:wrap}.inline-actions button{padding:7px 9px;font-size:12px}.receipt{display:none}
+@media(max-width:800px){.extra-menu-grid{grid-template-columns:1fr}}
+@media print{body *{visibility:hidden!important}.receipt,.receipt *{visibility:visible!important}.receipt{display:block!important;position:absolute;left:0;top:0;width:72mm;padding:2mm;font-family:monospace;font-size:11px;color:#000;background:#fff}.receipt h2,.receipt p{text-align:center;margin:3px 0}.receipt table{min-width:0;width:100%;font-size:11px}.receipt th,.receipt td{padding:2px 0;border-bottom:1px dashed #999;font-size:11px}.receipt .right{text-align:right}.no-print{display:none!important}}
+
+/* Warna tampilan saja: tidak mengubah transaksi atau penyimpanan data */
+.cards .card:nth-child(1){background:linear-gradient(135deg,#e7fff3,#c9f5df);border-color:#79d9ad}
+.cards .card:nth-child(1) .big{color:#14784b}
+.cards .card:nth-child(2){background:linear-gradient(135deg,#eaf5ff,#d7ebff);border-color:#8bc8ff}
+.cards .card:nth-child(2) .big{color:#1767b1}
+.cards .card:nth-child(3){background:linear-gradient(135deg,#f4edff,#e7dcff);border-color:#c1a5ff}
+.cards .card:nth-child(3) .big{color:#6337bd}
+.cards .card:nth-child(4){background:linear-gradient(135deg,#e5fbff,#cef5f7);border-color:#83dce5}
+.cards .card:nth-child(4) .big{color:#087f91}
+.menu-btn{border-radius:14px;padding:15px 13px;box-shadow:0 3px 10px #18324d08;transition:transform .12s ease,box-shadow .12s ease}
+.menu-btn.menu-food{background:linear-gradient(135deg,#fff7e6,#ffedc2);border-color:#f2c66d;color:#75430b}
+.menu-btn.menu-food .price{color:#a65a00}
+/* Semua varian bernama Mie Ayam mendapat warna yang sama */
+.menu-btn.menu-mieayam{background:linear-gradient(135deg,#fff0f1,#ffe0e4);border-color:#ff9aa4;color:#7f1d2d}
+.menu-btn.menu-mieayam .price{color:#d52d40}
+.menu-btn.menu-drink{background:linear-gradient(135deg,#eaf7ff,#d6edff);border-color:#86c9ff;color:#123e70}
+.menu-btn.menu-drink .price{color:#0876c9}
+.menu-btn:active{box-shadow:0 1px 4px #18324d12}
+@media(max-width:800px){.menu-btn{min-height:100px;padding:14px 12px}.menu-btn strong{font-size:15px;line-height:1.25}.menu-btn .price{font-size:14px}}
+
+/* Logo penuh khusus halaman login; fitur kasir lainnya tidak diubah */
+.login-logo{display:block;width:min(100%,300px);height:auto;max-height:250px;object-fit:contain;margin:0 auto 14px;border-radius:12px}
+@media(max-width:600px){.login-logo{width:min(100%,260px);max-height:220px}}
+</style>
+</head>
+<body>
+<section id="loginScreen" class="login-wrap">
+  <div class="panel">
+    <div class="login-logo" style="font-size:42px;line-height:1.3;padding:18px 8px;color:#17324d;background:#eef6fb"><span>🍜</span><br><strong style="font-size:21px">DEMO KASIR UMKM</strong></div><div class="notice">MODE DEMO — transaksi dan perubahan hanya tersimpan di browser ini, tidak terhubung ke spreadsheet pelanggan.</div><p class="small">Masukkan PIN demo: <b>1234</b> untuk Owner atau <b>1111</b> untuk Kasir.</p>
+    <form id="loginForm"><div class="field"><label>PIN 4–8 angka</label><input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" required placeholder="Masukkan PIN"></div><button class="primary" type="submit">Masuk</button></form>
+    <p class="small">PIN kasir dan pemilik berbeda. Jangan bagikan PIN pemilik ke kasir.</p>
+  </div>
+</section>
+<div id="app" class="hidden">
+<header><div><h1 id="brand">🍜 Demo Kasir UMKM</h1><small id="userInfo">Kasir</small></div><div class="nav"><button id="navKasir" class="active" onclick="showPage('kasir')">Kasir</button><button id="navKas" onclick="showPage('kas')">Kas Harian</button><button onclick="openReport()">Laporan</button><button onclick="resetDemo()">Reset Demo</button><button onclick="logoutApp()">Keluar</button></div></header>
+<main>
+<div class="notice" style="margin-bottom:12px"><b>MODE DEMO:</b> Gunakan untuk presentasi. Data lokal browser, bukan data asli pelanggan.</div>
+<section id="kasirPage">
+  <div id="kasAlert" class="notice">Memuat status kas...</div>
+  <div class="cards">
+    <div class="card"><div class="label">Omzet Hari Ini</div><div class="big" id="omzet">Rp0</div></div>
+    <div class="card"><div class="label">Transaksi</div><div class="big" id="count">0</div></div>
+    <div class="card"><div class="label">Penjualan Cash</div><div class="big" id="cashSales">Rp0</div></div>
+    <div class="card"><div class="label">Saldo Kas Seharusnya</div><div class="big" id="expectedCash">—</div></div>
+  </div>
+  <div class="layout">
+    <div class="panel"><div class="section-title"><h2>Pilih Menu</h2><span class="small">Tekan menu untuk menambah</span></div><div id="menuGrid" class="menu-grid"></div></div>
+    <div class="panel"><h2>Pesanan</h2><div id="cart"><p class="small">Belum ada menu dipilih.</p></div>
+      <div class="total-line total"><span>Total</span><span id="cartTotal">Rp0</span></div>
+      <div class="field"><label>Metode pembayaran</label><select id="method" onchange="updatePayment()"><option>Cash</option><option>QRIS</option></select></div>
+      <div id="cashFields"><div class="field"><label>Uang diterima (Rp)</label><input id="received" type="number" min="0" step="1" inputmode="numeric" placeholder="Contoh: 100000" oninput="renderChange()"></div><div class="change-box"><div class="label">Kembalian</div><div class="big" id="change">Rp0</div><div class="small" id="cashHint">Masukkan uang dari pembeli.</div></div></div>
+      <div id="qrisHint" class="notice hidden">Pastikan pembayaran QRIS benar-benar masuk sebelum transaksi disimpan. Kembalian Rp0.</div>
+      <button id="saveBtn" class="primary" onclick="saveSale()">Simpan Transaksi</button><button class="secondary" style="width:100%;margin-top:8px" onclick="clearCart()">Kosongkan Pesanan</button>
+    </div>
+  </div>
+  <div id="menuAdminPanel" class="panel hidden" style="margin-top:14px"><h2>Tambah Menu Dadakan</h2><p class="small">Menu baru langsung muncul di kasir setelah disimpan.</p><form id="addMenuForm"><div class="extra-menu-grid"><div class="field"><label>Nama menu</label><input id="newMenuName" maxlength="80" required placeholder="Contoh: Bakso Jumbo"></div><div class="field"><label>Harga (Rp)</label><input id="newMenuPrice" type="number" min="1" step="1" required placeholder="Contoh: 20000"></div><div class="field"><label>Kategori (opsional)</label><input id="newMenuCategory" maxlength="40" placeholder="Contoh: Makanan"></div></div><button class="primary" style="margin-top:10px" type="submit">+ Tambah Menu</button></form></div>
+  <div class="panel" style="margin-top:14px"><div class="section-title"><h2>Transaksi Terbaru Hari Ini</h2><button class="secondary" onclick="refreshData()">Refresh</button></div><div id="recent" class="table-wrap"></div></div>
+</section>
+<section id="kasPage" class="hidden">
+  <div class="cards">
+    <div class="card"><div class="label">Saldo Awal</div><div class="big" id="kasOpening">—</div></div>
+    <div class="card"><div class="label">Penjualan Cash</div><div class="big" id="kasCash">—</div></div>
+    <div class="card"><div class="label">Pengeluaran Tunai</div><div class="big" id="kasExpense">—</div></div>
+    <div class="card"><div class="label">Saldo Seharusnya</div><div class="big" id="kasExpected">—</div></div>
+  </div>
+  <div class="layout">
+    <div class="panel"><h2>Status Kas Hari Ini</h2><div id="kasStatus"></div><div id="openForm" class="hidden"><div class="field"><label>Saldo awal uang kembalian (Rp)</label><input id="openingAmount" type="number" min="0" inputmode="numeric" value="0" placeholder="Contoh: 200000"></div><div class="field"><label>Catatan (opsional)</label><input id="openingNote" placeholder="Contoh: uang pecahan untuk kembalian"></div><button class="primary" onclick="startCashDay()">Mulai Hari / Buka Kas</button></div></div>
+    <div class="panel"><h2>Catat Pengeluaran Tunai</h2><div class="field"><label>Nominal (Rp)</label><input id="expenseAmount" type="number" min="1" inputmode="numeric" placeholder="Contoh: 20000"></div><div class="field"><label>Keterangan</label><input id="expenseNote" placeholder="Contoh: beli gas"></div><button id="expenseBtn" class="secondary" style="width:100%" onclick="submitExpense()">Simpan Pengeluaran</button><p class="small">Hanya pemilik. Pengeluaran akan mengurangi saldo kas yang seharusnya ada.</p></div>
+  </div>
+  <div class="panel" style="margin-top:14px"><h2>Tutup Kas</h2><p class="small">Hitung uang tunai fisik di laci. Jangan masukkan saldo QRIS.</p><div class="field"><label>Uang fisik di laci (Rp)</label><input id="physicalAmount" type="number" min="0" inputmode="numeric" placeholder="Jumlah uang setelah dihitung"></div><div class="field"><label>Catatan penutupan (opsional)</label><input id="closeNote" placeholder="Contoh: selisih sudah diperiksa"></div><button id="closeBtn" class="primary" onclick="closeCashDay()">Tutup Kas Hari Ini</button><div id="closeResult" style="margin-top:12px"></div></div>
+</section>
+</main></div>
+<div id="receipt" class="receipt"></div>
+<div id="toast" class="toast hidden"></div>
+<script>
+let TOKEN='', ROLE='', DATA=null, MENU=[], CART={}, SESSION_PIN='', LAST_SALE=null;
+const $=id=>document.getElementById(id);
+const rupiah=n=>'Rp'+Number(n||0).toLocaleString('id-ID');
+const DEMO_KEY='demo_kasir_umkm_local_v1';
+const DEMO_APP_NAME='Demo Kasir UMKM';
+function todayKey(){return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jakarta'});}
+function nowISO(){return new Date().toISOString();}
+function timeLabel(v=nowISO()){return new Date(v).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});}
+function dateLabel(v=nowISO()){return new Date(v).toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta'});}
+function defaultDemoState(){
+  const d=todayKey();
+  return {
+    menu:[
+      {id:'m1',name:'Mie Ayam Biasa',price:12000,category:'Mie Ayam'},
+      {id:'m2',name:'Mie Ayam Bakso',price:16000,category:'Mie Ayam'},
+      {id:'m3',name:'Mie Ayam Ceker',price:15000,category:'Mie Ayam'},
+      {id:'m4',name:'Bakso Biasa',price:13000,category:'Bakso'},
+      {id:'m5',name:'Bakso Urat',price:17000,category:'Bakso'},
+      {id:'m6',name:'Es Teh',price:4000,category:'Minuman'},
+      {id:'m7',name:'Teh Hangat',price:3000,category:'Minuman'},
+      {id:'m8',name:'Air Mineral',price:4000,category:'Minuman'}
+    ],
+    transactions:[],
+    kas:{day:d,openedAt:null,opening:0,openedBy:'',closedAt:null,closedBy:'',physical:0,difference:0,expense:0,expenses:[]},
+    nextNo:1
+  };
+}
+function readDemoState(){
+  try{
+    const raw=localStorage.getItem(DEMO_KEY);
+    if(raw){const parsed=JSON.parse(raw);if(parsed&&Array.isArray(parsed.menu)&&Array.isArray(parsed.transactions)&&parsed.kas)return parsed;}
+  }catch(e){}
+  const st=defaultDemoState();writeDemoState(st);return st;
+}
+function writeDemoState(st){try{localStorage.setItem(DEMO_KEY,JSON.stringify(st));}catch(e){toast('Browser tidak bisa menyimpan data demo.');}}
+function ensureToday(st){
+  const d=todayKey();
+  if(!st.kas || st.kas.day!==d) st.kas={day:d,openedAt:null,opening:0,openedBy:'',closedAt:null,closedBy:'',physical:0,difference:0,expense:0,expenses:[]};
+  return st;
+}
+function toast(msg){const el=$('toast');if(!el)return;el.textContent=msg;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);}
+function apiCall(action,...args){
+  return new Promise((resolve,reject)=>{
+    try{
+      let st=ensureToday(readDemoState()), result;
+      const arg=args[0];
+      if(action==='login'){
+        if(SESSION_PIN==='1234') result={token:'DEMO-OWNER',role:'owner',name:'Pemilik Demo',appName:DEMO_APP_NAME};
+        else if(SESSION_PIN==='1111') result={token:'DEMO-CASHIER',role:'cashier',name:'Kasir Demo',appName:DEMO_APP_NAME};
+        else throw new Error('PIN demo salah. Gunakan 1234 (owner) atau 1111 (kasir).');
+      } else if(action==='logout'){ result={ok:true}; }
+      else if(action==='getInitialData'){
+        const todays=st.transactions.filter(t=>t.day===todayKey()).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+        const cashSales=todays.filter(t=>t.method==='Cash').reduce((a,t)=>a+t.total,0);
+        const omzet=todays.reduce((a,t)=>a+t.total,0);
+        result={menu:st.menu,transactions:todays.map(t=>({time:t.time,no:t.no,detail:t.detail,method:t.method,total:t.total,received:t.received,change:t.change})),
+          summary:{omzet,transactions:todays.length,cashSales,expectedCash:st.kas.openedAt?st.kas.opening+cashSales-st.kas.expense:null},
+          kas:st.kas};
+      } else if(action==='addMenu'){
+        if(ROLE!=='owner')throw new Error('Fitur ini hanya untuk owner demo.');
+        const m={id:'m'+Date.now(),name:String(arg.name||'').trim(),price:Number(arg.price),category:String(arg.category||'Lainnya')};
+        if(!m.name||!Number.isFinite(m.price)||m.price<1)throw new Error('Data menu tidak valid.');
+        st.menu.push(m);writeDemoState(st);result=m;
+      } else if(action==='startDay'){
+        if(ROLE!=='owner')throw new Error('Hanya owner demo yang bisa membuka kas.');
+        if(st.kas.openedAt&&!st.kas.closedAt)throw new Error('Kas hari ini sudah dibuka.');
+        st.kas={day:todayKey(),openedAt:nowISO(),opening:Number(arg)||0,openedBy:'Pemilik Demo',closedAt:null,closedBy:'',physical:0,difference:0,expense:0,expenses:[]};
+        writeDemoState(st);result=st.kas;
+      } else if(action==='addExpense'){
+        if(ROLE!=='owner')throw new Error('Hanya owner demo yang bisa mencatat pengeluaran.');
+        if(!st.kas.openedAt||st.kas.closedAt)throw new Error('Kas belum dibuka atau sudah ditutup.');
+        const amount=Number(arg), note=String(args[1]||'');
+        if(!Number.isFinite(amount)||amount<=0)throw new Error('Nominal pengeluaran harus lebih dari nol.');
+        st.kas.expense=(st.kas.expense||0)+amount;st.kas.expenses=st.kas.expenses||[];
+        st.kas.expenses.push({amount,note,at:nowISO()});writeDemoState(st);result=st.kas;
+      } else if(action==='saveTransaction'){
+        if(!st.kas.openedAt||st.kas.closedAt)throw new Error('Buka kas terlebih dahulu sebelum menerima transaksi.');
+        const items=(arg.items||[]).map(it=>{const m=st.menu.find(x=>x.id===it.id);if(!m)throw new Error('Menu tidak ditemukan.');return {id:m.id,name:m.name,price:Number(m.price),qty:Number(it.qty)};});
+        if(!items.length)throw new Error('Pilih menu terlebih dahulu.');
+        const total=items.reduce((sum,it)=>sum+it.price*it.qty,0), method=arg.method==='QRIS'?'QRIS':'Cash', received=method==='Cash'?Number(arg.received||0):total;
+        if(received<total)throw new Error('Uang pembeli masih kurang.');
+        const no='DEMO-'+String(st.nextNo++).padStart(4,'0'), createdAt=nowISO();
+        result={no,appName:DEMO_APP_NAME,createdAt,date:dateLabel(createdAt),time:timeLabel(createdAt),day:todayKey(),items,detail:items.map(i=>i.name+' ×'+i.qty).join(', '),method,total,received,change:Math.max(0,received-total)};
+        st.transactions.push(result);writeDemoState(st);
+      } else if(action==='getTransaction'){
+        result=st.transactions.find(t=>t.no===arg);
+        if(!result)throw new Error('Transaksi demo tidak ditemukan.');
+      } else if(action==='closeDay'){
+        if(ROLE!=='owner')throw new Error('Hanya owner demo yang bisa menutup kas.');
+        if(!st.kas.openedAt||st.kas.closedAt)throw new Error('Kas belum dibuka atau sudah ditutup.');
+        const todays=st.transactions.filter(t=>t.day===todayKey());
+        const cashSales=todays.filter(t=>t.method==='Cash').reduce((a,t)=>a+t.total,0);
+        const expected=st.kas.opening+cashSales-st.kas.expense, physical=Number(arg)||0;
+        st.kas.closedAt=nowISO();st.kas.closedBy='Pemilik Demo';st.kas.physical=physical;st.kas.expected=expected;st.kas.difference=physical-expected;writeDemoState(st);
+        result={expected,physical,difference:physical-expected};
+      } else throw new Error('Fungsi demo belum tersedia: '+action);
+      resolve(result);
+    }catch(e){reject(e);}
+  });
+}
+function call(fn,...args){return apiCall(fn,...args)}
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();const pin=$('pin').value;SESSION_PIN=pin;
+  try{
+    const r=await apiCall('login');sessionStorage.setItem('kasirDemoSessionPin',pin);TOKEN=r.token;ROLE=r.role;
+    $('pin').value='';$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
+    $('brand').textContent='🍜 '+(r.appName||DEMO_APP_NAME);$('userInfo').textContent='Login sebagai '+r.name+' ('+ROLE+')';
+    if(ROLE!=='owner'){$('navKas').classList.add('hidden');$('expenseBtn').classList.add('hidden');$('openForm').classList.add('hidden');$('closeBtn').classList.add('hidden');$('menuAdminPanel').classList.add('hidden')}else{$('menuAdminPanel').classList.remove('hidden')}
+    await refreshData();
+  }catch(err){SESSION_PIN='';toast(err.message||'Login demo gagal');}
+});
+$('addMenuForm').addEventListener('submit',async e=>{
+  e.preventDefault();const name=$('newMenuName').value.trim(),price=Number($('newMenuPrice').value),category=$('newMenuCategory').value.trim();
+  if(!name||!Number.isFinite(price)||price<1)return toast('Isi nama menu dan harga yang valid.');
+  try{await call('addMenu',{name,price,category});$('addMenuForm').reset();toast('Menu demo berhasil ditambahkan.');await refreshData();}catch(err){toast(err.message||'Gagal menambah menu demo');}
+});
+function showPage(page){$('kasirPage').classList.toggle('hidden',page!=='kasir');$('kasPage').classList.toggle('hidden',page!=='kas');$('navKasir').classList.toggle('active',page==='kasir');$('navKas').classList.toggle('active',page==='kas');if(page==='kas')refreshData();}
+function openReport(){
+  const st=readDemoState(), rows=st.transactions.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const total=rows.reduce((a,t)=>a+t.total,0), cash=rows.filter(t=>t.method==='Cash').reduce((a,t)=>a+t.total,0), qris=rows.filter(t=>t.method==='QRIS').reduce((a,t)=>a+t.total,0);
+  let modal=document.getElementById('demoReportModal');
+  if(!modal){modal=document.createElement('div');modal.id='demoReportModal';modal.style.cssText='position:fixed;inset:0;background:#10203399;z-index:50;display:flex;align-items:center;justify-content:center;padding:14px;';document.body.appendChild(modal);}
+  modal.innerHTML=`<div style="background:#fff;border-radius:16px;padding:18px;width:min(100%,950px);max-height:90vh;overflow:auto;color:#172033"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 style="margin:0">Laporan Demo</h2><button class="secondary" onclick="document.getElementById('demoReportModal').remove()">Tutup</button></div><p class="small">Data contoh tersimpan di browser ini saja. Total lintas hari untuk demonstrasi.</p><div class="cards" style="margin-top:14px"><div class="card"><div class="label">Total Penjualan</div><div class="big">${rupiah(total)}</div></div><div class="card"><div class="label">Transaksi</div><div class="big">${rows.length}</div></div><div class="card"><div class="label">Cash</div><div class="big">${rupiah(cash)}</div></div><div class="card"><div class="label">QRIS</div><div class="big">${rupiah(qris)}</div></div></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>No. Transaksi</th><th>Menu</th><th>Metode</th><th>Total</th></tr></thead><tbody>${rows.length?rows.map(t=>`<tr><td>${esc(t.date)} ${esc(t.time)}</td><td>${esc(t.no)}</td><td>${esc(t.detail)}</td><td>${esc(t.method)}</td><td>${rupiah(t.total)}</td></tr>`).join(''):'<tr><td colspan="5">Belum ada transaksi. Buat transaksi contoh dari halaman kasir.</td></tr>'}</tbody></table></div></div>`;
+}
+async function refreshData(){try{DATA=await call('getInitialData');MENU=DATA.menu;renderDashboard();renderMenu();renderCart();renderRecent();renderCashPanel();}catch(e){toast(e.message||'Gagal memuat data demo');}}
+function renderDashboard(){const s=DATA.summary;$('omzet').textContent=rupiah(s.omzet);$('count').textContent=s.transactions;$('cashSales').textContent=rupiah(s.cashSales);$('expectedCash').textContent=s.expectedCash===null?'—':rupiah(s.expectedCash);const k=DATA.kas;const a=$('kasAlert');if(!k||!k.openedAt){a.textContent='MODE DEMO: buka kas dengan saldo awal sebelum mencoba transaksi.';a.className='notice'}else if(k.closedAt){a.textContent='Kas demo hari ini sudah ditutup. Reset demo atau lanjutkan besok.';a.className='notice'}else{a.textContent='Kas demo sedang berjalan. Transaksi hanya disimpan di browser ini.';a.className='notice success'}$('saveBtn').disabled=!k||!k.openedAt||!!k.closedAt;}
+function renderMenu(){ $('menuGrid').innerHTML=MENU.map(m=>{const text=((m.category||'')+' '+(m.name||'')).toLowerCase(),name=(m.name||'').toLowerCase();const mieAyam=/mie\s*ayam/.test(name);const drink=/minum|drink|es |es$|teh|jeruk|jus|juice|kopi|coffee|cappuccino|susu|air mineral|le mineral|aqua|lemon tea|thai tea|matcha|sirup|soda|soft drink|boba|milkshake/.test(text);const colorClass=mieAyam?'menu-mieayam':(drink?'menu-drink':'menu-food');return `<button class="menu-btn ${colorClass}" onclick="addItem('${esc(m.id)}')"><strong>${esc(m.name)}</strong><span class="price">${rupiah(m.price)}</span></button>`}).join('')||'<p>Menu belum tersedia.</p>'; }
+function addItem(id){const m=MENU.find(x=>x.id===id);if(!m)return;CART[id]=(CART[id]||0)+1;renderCart();}
+function adjust(id,delta){CART[id]=(CART[id]||0)+delta;if(CART[id]<=0)delete CART[id];renderCart();}
+function clearCart(){CART={};$('received').value='';renderCart();}
+function cartItems(){return Object.entries(CART).map(([id,qty])=>({id,qty,menu:MENU.find(m=>m.id===id)})).filter(x=>x.menu);}
+function totalNow(){return cartItems().reduce((a,x)=>a+x.menu.price*x.qty,0);}
+function renderCart(){const items=cartItems();$('cart').innerHTML=items.length?items.map(x=>`<div class="cart-row"><div><strong>${esc(x.menu.name)}</strong><div class="small">${rupiah(x.menu.price)} × ${x.qty} = ${rupiah(x.menu.price*x.qty)}</div></div><div class="qty"><button onclick="adjust('${esc(x.menu.id)}',-1)">−</button><b>${x.qty}</b><button onclick="adjust('${esc(x.menu.id)}',1)">+</button></div></div>`).join(''):'<p class="small">Belum ada menu dipilih.</p>';$('cartTotal').textContent=rupiah(totalNow());renderChange();}
+function updatePayment(){$('cashFields').classList.toggle('hidden',$('method').value!=='Cash');$('qrisHint').classList.toggle('hidden',$('method').value!=='QRIS');renderChange();}
+function renderChange(){const total=totalNow(),received=Number($('received').value||0);if($('method').value==='QRIS'){$('change').textContent=rupiah(0);$('cashHint').textContent='Pembayaran QRIS tidak menggunakan uang kembalian.';return;}const diff=received-total;if(received<total){$('change').textContent=rupiah(0);$('cashHint').textContent=received===0?'Masukkan uang dari pembeli.':'Uang kurang '+rupiah(total-received);$('change').style.color='#c0392b';}else{$('change').textContent=rupiah(diff);$('cashHint').textContent='Nominal kembalian yang harus diberikan.';$('change').style.color='#168653';}}
+async function saveSale(){const items=cartItems().map(x=>({id:x.menu.id,qty:x.qty}));if(!items.length)return toast('Pilih menu terlebih dahulu.');const total=totalNow(),method=$('method').value,received=method==='Cash'?Number($('received').value||0):total;if(method==='Cash'&&received<total)return toast('Uang pembeli masih kurang.');if(!confirm('Simpan transaksi demo sebesar '+rupiah(total)+'?'))return;$('saveBtn').disabled=true;try{const r=await call('saveTransaction',{items,method,received});LAST_SALE=r;clearCart();await refreshData();if(confirm('Transaksi demo tersimpan di browser ini. Mau cetak struk sekarang?'))printReceipt(r);else toast('Transaksi demo tersimpan.');}catch(e){toast(e.message||'Transaksi demo gagal disimpan');}finally{$('saveBtn').disabled=false;renderDashboard();}}
+function renderRecent(){const rows=DATA.transactions||[];$('recent').innerHTML=rows.length?`<table><thead><tr><th>Waktu</th><th>No. Transaksi</th><th>Menu</th><th>Metode</th><th>Total</th><th>Diterima</th><th>Kembalian</th><th>Aksi</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.no)}</td><td>${esc(r.detail)}</td><td>${esc(r.method)}</td><td>${rupiah(r.total)}</td><td>${rupiah(r.received)}</td><td>${rupiah(r.change)}</td><td><button class="secondary" onclick="printTransaction('${esc(r.no)}')">Cetak</button></td></tr>`).join('')}</tbody></table>`:'<p class="small">Belum ada transaksi demo hari ini.</p>';}
+async function printTransaction(no){try{const r=await call('getTransaction',no);printReceipt(r);}catch(e){toast(e.message||'Transaksi demo tidak ditemukan');}}
+function printReceipt(r){if(!r)return toast('Data transaksi demo tidak tersedia.');const items=Array.isArray(r.items)?r.items:[];const rows=items.map(x=>`<tr><td>${esc(x.name||x.menuName||'Menu')} ×${Number(x.qty||1)}</td><td class="right">${rupiah(Number(x.price||0)*Number(x.qty||1))}</td></tr>`).join('');$('receipt').innerHTML=`<h2>${esc(r.appName||DEMO_APP_NAME)}</h2><p>MODE DEMO</p><p>STRUK PEMBELIAN</p><p>${esc(r.date||dateLabel())} ${esc(r.time||'')}</p><p>No: ${esc(r.no||'-')}</p><hr><table><tbody>${rows||`<tr><td>${esc(r.detail||'Transaksi')}</td><td class="right">${rupiah(r.total)}</td></tr>`}</tbody></table><hr><table><tbody><tr><td><b>TOTAL</b></td><td class="right"><b>${rupiah(r.total)}</b></td></tr><tr><td>Metode</td><td class="right">${esc(r.method||'-')}</td></tr><tr><td>Diterima</td><td class="right">${rupiah(r.received)}</td></tr><tr><td>Kembalian</td><td class="right">${rupiah(r.change)}</td></tr></tbody></table><hr><p>Ini struk contoh</p><p>Terima kasih 🙏</p>`;window.print();}
+function formatJam(value){if(!value)return '-';const d=new Date(value);if(!Number.isNaN(d.getTime()))return d.toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});const m=String(value).match(/(\d{1,2}:\d{2}(?::\d{2})?)/);return m?m[1]:String(value);}
+function renderCashPanel(){const k=DATA.kas,s=DATA.summary;$('kasOpening').textContent=k&&k.openedAt?rupiah(k.opening):rupiah(0);$('kasCash').textContent=rupiah(s.cashSales);$('kasExpense').textContent=rupiah(k?k.expense:0);$('kasExpected').textContent=k&&k.openedAt?rupiah(k.opening+s.cashSales-k.expense):'—';if(!k||!k.openedAt){$('kasStatus').innerHTML='<div class="notice">Kas demo belum dibuka.</div>';$('openForm').classList.toggle('hidden',ROLE!=='owner');$('closeBtn').disabled=true;$('expenseBtn').disabled=true;}else if(k.closedAt){$('kasStatus').innerHTML='<div class="notice success">Kas demo ditutup oleh '+esc(k.closedBy)+'. Uang fisik: '+rupiah(k.physical)+'. Selisih: <b>'+rupiah(k.difference)+'</b>.</div>';$('openForm').classList.add('hidden');$('closeBtn').disabled=true;$('expenseBtn').disabled=true;$('closeResult').innerHTML=`<div class="notice ${k.difference===0?'success':''}">Saldo seharusnya ${rupiah(k.expected)} · Uang fisik ${rupiah(k.physical)} · Selisih ${rupiah(k.difference)}</div>`;}else{$('kasStatus').innerHTML='<div class="notice success">Kas demo sedang berjalan sejak '+esc(formatJam(k.openedAt))+' oleh '+esc(k.openedBy)+'.</div>';$('openForm').classList.add('hidden');$('closeBtn').disabled=ROLE!=='owner';$('expenseBtn').disabled=ROLE!=='owner';}}
+async function startCashDay(){const amount=Number($('openingAmount').value);if(!Number.isFinite(amount)||amount<0)return toast('Masukkan saldo awal yang valid.');try{await call('startDay',amount,$('openingNote').value);toast('Kas demo berhasil dibuka.');await refreshData();}catch(e){toast(e.message);}}
+async function submitExpense(){const amount=Number($('expenseAmount').value);try{await call('addExpense',amount,$('expenseNote').value);$('expenseAmount').value='';$('expenseNote').value='';toast('Pengeluaran demo dicatat.');await refreshData();}catch(e){toast(e.message);}}
+async function closeCashDay(){const amount=Number($('physicalAmount').value);if(!Number.isFinite(amount)||amount<0)return toast('Masukkan uang fisik yang valid.');if(!confirm('Tutup kas demo hari ini?'))return;try{const k=await call('closeDay',amount,$('closeNote').value);$('closeResult').innerHTML=`<div class="notice ${k.difference===0?'success':''}">Saldo seharusnya ${rupiah(k.expected)}<br>Uang fisik ${rupiah(k.physical)}<br><b>Selisih: ${rupiah(k.difference)}</b></div>`;toast('Kas demo berhasil ditutup.');await refreshData();}catch(e){toast(e.message);}}
+async function logoutApp(){TOKEN='';ROLE='';SESSION_PIN='';sessionStorage.removeItem('kasirDemoSessionPin');DATA=null;CART={};$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');}
+function resetDemo(){if(!confirm('Hapus semua transaksi dan perubahan menu demo di browser ini? Data pelanggan asli tidak tersentuh.'))return;localStorage.removeItem(DEMO_KEY);CART={};DATA=null;MENU=[];refreshData().then(()=>toast('Data demo direset.'));if($('app').classList.contains('hidden'))toast('Data demo direset. Login kembali untuk melanjutkan.');}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+</script>
+</body>
+</html>
